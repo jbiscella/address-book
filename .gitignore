@@ -1,0 +1,6 @@
+# Excludiing platform dependant files
+.settings/
+target/
+.classpath
+.project
+settings.json
