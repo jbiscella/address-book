@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.Permissions;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,6 +49,14 @@ public class CSVPersonUtilsTest {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       fail("Unexpected 'IOException' had been thrown.");
     }
+  }
+
+
+  @Test
+  public void testCountByGenderKOMissingGender() throws IllegalArgumentException, IOException {
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("Gender is not sat");
+    personUtils.countByGender(null);
   }
 
   @Test

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 public class CSVPersonUtils implements PersonUtils {
 
   // Error messages
+  private static final String ERROR_MESSAGE_COUNT_BY_GENDER = "Gender is not sat";
   private static final String ERROR_MESSAGE_COUNT_DAYS_NULL_NAMES = "One or both the person full names are null";
   private static final String ERROR_MESSAGE_COUNT_DAYS_WRONG_RECORD_NUMBER = "2 records were expected, less/more were returned";
   private static final String ERROR_MESSAGE_COUNT_DAYS_NO_DATE_OF_BIRTH = "date not present for one or both of the persons";
@@ -33,6 +35,8 @@ public class CSVPersonUtils implements PersonUtils {
    * @inheritDoc
    */
   public long countByGender(final Gender gender) throws IllegalArgumentException, IOException {
+    if (gender == null)
+      throw new IllegalArgumentException(ERROR_MESSAGE_COUNT_BY_GENDER);
     Predicate<String> csvFilterByGender = csvLine -> gender.equals(new Person(csvLine).getGender().get());
     return dataReader.readFilteredData(csvFilterByGender).stream().collect(Collectors.counting());
   }
