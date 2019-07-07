@@ -1,6 +1,8 @@
 package com.gumtree.addressbook;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -8,7 +10,7 @@ import com.gumtree.addressbook.data.DataReader;
 import com.gumtree.addressbook.data.bom.Person;
 import com.gumtree.addressbook.data.bom.Person.Gender;
 
-public class CSVPersonUtils implements PersonUtils{
+public class CSVPersonUtils implements PersonUtils {
 
   private final DataReader dataReader;
 
@@ -23,8 +25,21 @@ public class CSVPersonUtils implements PersonUtils{
    */
   public long countByGender(final Gender gender) throws IllegalArgumentException, IOException {
     Predicate<String> csvFilterByGender = csvLine -> gender.equals(new Person(csvLine).getGender().get());
-    return dataReader.readFilteredData(csvFilterByGender)
+    return dataReader.readFilteredData(csvFilterByGender).stream().collect(Collectors.counting());
+  }
+
+  /**
+   * @inheritDoc
+   */
+  @Override
+  public Person getOldestPerson() throws IOException{
+    Function<String, Person> csvToPerson = Person::new;
+    Comparator<Person> compareDateOfBirth = (person1, person2) -> person2.getDateOfBirth().get().compareTo(person1.getDateOfBirth().get());
+    return dataReader.readAllData()
                      .stream()
-                     .collect(Collectors.counting());
+                     .map(csvToPerson)
+                     .filter(person -> person.getDateOfBirth().isPresent())
+                     .max(compareDateOfBirth)
+                     .get();
   }
 }

@@ -1,10 +1,12 @@
 package com.gumtree.addressbook;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.Permissions;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,5 +57,19 @@ public class CSVPersonUtilsTest {
     thrown.expect(IllegalArgumentException.class);
     personUtils = new CSVPersonUtils(null);
     personUtils.countByGender(Gender.MALE);
+  }
+
+  
+  @Test
+  public void testGetTheOldest(){
+    try {
+      assertEquals("Wrong oldest found", personUtils.getOldestPerson().getFullname(), "Wes Jackson");
+    } catch (IllegalArgumentException e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      fail("Unexpected 'IllegalArgumentException' had been thrown.");
+    } catch (IOException e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      fail("Unexpected 'IOException' had been thrown.");
+    }
   }
 }

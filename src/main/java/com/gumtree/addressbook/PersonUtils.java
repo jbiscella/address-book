@@ -2,6 +2,7 @@ package com.gumtree.addressbook;
 
 import java.io.IOException;
 
+import com.gumtree.addressbook.data.bom.Person;
 import com.gumtree.addressbook.data.bom.Person.Gender;
 
 /**
@@ -18,4 +19,9 @@ public interface PersonUtils {
    */
   public long countByGender(final Gender gender) throws IllegalArgumentException, IOException;
   
+  /**
+   * Returns the {@link Person} item of the oldest person in the addressbook
+   * @return
+   */
+  public Person getOldestPerson() throws IOException;
 }
