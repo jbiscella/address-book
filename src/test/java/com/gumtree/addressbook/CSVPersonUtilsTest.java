@@ -59,9 +59,8 @@ public class CSVPersonUtilsTest {
     personUtils.countByGender(Gender.MALE);
   }
 
-  
   @Test
-  public void testGetTheOldest(){
+  public void testGetTheOldest() {
     try {
       assertEquals("Wrong oldest found", personUtils.getOldestPerson().getFullname(), "Wes Jackson");
     } catch (IllegalArgumentException e) {
@@ -71,5 +70,42 @@ public class CSVPersonUtilsTest {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       fail("Unexpected 'IOException' had been thrown.");
     }
+  }
+
+  @Test
+  public void testCountDaysBetweenBirths() {
+    try {
+      long days = personUtils.countDaysBetweenBirths("Bill McKnight", "Paul Robinson");
+      assertTrue("Wrong number of days between the 2 birth days",
+          personUtils.countDaysBetweenBirths("Bill McKnight", "Paul Robinson") == 2862);
+    } catch (IllegalArgumentException e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      fail("Unexpected 'IllegalArgumentException' had been thrown.");
+    } catch (IOException e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      fail("Unexpected 'IOException' had been thrown.");
+    }
+  }
+
+  @Test
+  public void testCountDaysBetweenBirthsKOSamePerson() throws IllegalArgumentException, IOException {
+    thrown.expect(IllegalStateException.class);
+    thrown.expectMessage("2 records were expected, less/more were returned");
+    personUtils.countDaysBetweenBirths("Bill McKnight", "Bill McKnight");
+  }
+
+  @Test
+  public void testCountDaysBetweenBirthsKOBlankFullName() throws IllegalArgumentException, IOException {
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("One or both the person full names are null");
+    personUtils.countDaysBetweenBirths("Bill McKnight", null);
+    personUtils.countDaysBetweenBirths("Bill McKnight", "");
+    personUtils.countDaysBetweenBirths("Bill McKnight", " ");
+    personUtils.countDaysBetweenBirths(null, "Bill McKnight");
+    personUtils.countDaysBetweenBirths("", "Bill McKnight");
+    personUtils.countDaysBetweenBirths(" ", "Bill McKnight");
+    personUtils.countDaysBetweenBirths(null, null);
+    personUtils.countDaysBetweenBirths("", "");
+    personUtils.countDaysBetweenBirths(" ", " ");
   }
 }
